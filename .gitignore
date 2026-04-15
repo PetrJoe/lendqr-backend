@@ -4,3 +4,4 @@ dist/
 coverage/
 docs/
 prd.md
+.DS_Store
