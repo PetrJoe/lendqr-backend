@@ -87,4 +87,47 @@ export const AuthService = {
     const token = signToken(user.id);
     return { user: { id: user.id, first_name: user.first_name, last_name: user.last_name, email: user.email }, token };
   },
+
+  forgotPassword: async (email: string) => {
+    const user = await UserRepository.findByEmail(email);
+    // Always return success to avoid user enumeration
+    if (!user) return { message: 'If that email exists, a reset token has been issued.' };
+
+    // Invalidate any existing unused tokens for this user
+    await db('password_reset_tokens').where({ user_id: user.id, used: false }).delete();
+
+    const rawToken = crypto.randomBytes(32).toString('hex');
+    const token_hash = crypto.createHash('sha256').update(rawToken).digest('hex');
+    const expires_at = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+
+    await db('password_reset_tokens').insert({
+      id: generateId(),
+      user_id: user.id,
+      token_hash,
+      expires_at,
+    });
+
+    // In production this would be emailed. For MVP, return in response.
+    return { message: 'Reset token issued.', reset_token: rawToken };
+  },
+
+  resetPassword: async (rawToken: string, newPassword: string) => {
+    const token_hash = crypto.createHash('sha256').update(rawToken).digest('hex');
+
+    const record = await db('password_reset_tokens')
+      .where({ token_hash, used: false })
+      .where('expires_at', '>', new Date())
+      .first();
+
+    if (!record) throw Errors.validation('Invalid or expired reset token.');
+
+    const password_hash = await bcrypt.hash(newPassword, 10);
+
+    await db.transaction(async (trx) => {
+      await trx('users').where({ id: record.user_id }).update({ password_hash });
+      await trx('password_reset_tokens').where({ id: record.id }).update({ used: true });
+    });
+
+    return { message: 'Password updated successfully.' };
+  },
 };

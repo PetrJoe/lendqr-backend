@@ -12,4 +12,14 @@ export const AuthController = {
     const result = await AuthService.login(req.body);
     res.json({ status: 'success', message: 'Login successful', data: result });
   }),
+
+  forgotPassword: asyncHandler(async (req: Request, res: Response) => {
+    const result = await AuthService.forgotPassword(req.body.email);
+    res.json({ status: 'success', data: result });
+  }),
+
+  resetPassword: asyncHandler(async (req: Request, res: Response) => {
+    const result = await AuthService.resetPassword(req.body.token, req.body.password);
+    res.json({ status: 'success', data: result });
+  }),
 };
