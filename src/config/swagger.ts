@@ -146,6 +146,88 @@ const spec: OpenAPIV3.Document = {
         },
       },
     },
+    '/auth/forgot-password': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Request a password reset token',
+        description: 'Always returns success to prevent user enumeration. In production the token would be emailed; for this MVP it is returned in the response.',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['email'],
+                properties: {
+                  email: { type: 'string', format: 'email', example: 'alice@test.com' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'Token issued (or silently ignored if email not found)',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string', example: 'success' },
+                    data: {
+                      type: 'object',
+                      properties: {
+                        message: { type: 'string' },
+                        reset_token: { type: 'string', description: 'Present only when email matched a user. Use in /auth/reset-password.' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': { description: 'Validation error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+        },
+      },
+    },
+    '/auth/reset-password': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Reset password using a valid token',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['token', 'password'],
+                properties: {
+                  token: { type: 'string', description: 'Token received from /auth/forgot-password' },
+                  password: { type: 'string', minLength: 8, example: 'NewPassword123!' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'Password updated',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string', example: 'success' },
+                    data: { type: 'object', properties: { message: { type: 'string' } } },
+                  },
+                },
+              },
+            },
+          },
+          '400': { description: 'Invalid or expired token', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+        },
+      },
+    },
     '/users/me': {
       get: {
         tags: ['Users'],
