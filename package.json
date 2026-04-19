@@ -2,13 +2,14 @@
   "name": "lendqr",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
     "dev": "nodemon",
     "build": "tsc",
+    "render-build": "npm ci && npm run build",
     "start": "node dist/server.js",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write src/**/*.ts",
