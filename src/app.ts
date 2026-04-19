@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get('/docs.json', (_req, res) => res.json(swaggerSpec));
 
 app.use('/api/v1/auth', authRoutes);
