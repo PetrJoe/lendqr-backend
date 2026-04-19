@@ -2,13 +2,10 @@ import type { Knex } from 'knex';
 import { env } from './env';
 
 const config: Knex.Config = {
-  client: 'mysql2',
+  client: 'pg',
   connection: {
-    host: env.db.host,
-    port: env.db.port,
-    user: env.db.user,
-    password: env.db.password,
-    database: env.db.name,
+    connectionString: env.db.url,
+    ssl: env.db.ssl ? { rejectUnauthorized: false } : false,
   },
   migrations: {
     directory: '../database/migrations',

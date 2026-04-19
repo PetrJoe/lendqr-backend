@@ -1,21 +1,15 @@
 import dotenv from 'dotenv';
-dotenv.config();
+import path from 'path';
 
-const required = (key: string): string => {
-  const val = process.env[key];
-  if (!val) throw new Error(`Missing required env var: ${key}`);
-  return val;
-};
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config();
 
 export const env = {
   port: parseInt(process.env.PORT || '3000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   db: {
-    host: process.env.DB_HOST || '127.0.0.1',
-    port: parseInt(process.env.DB_PORT || '3306', 10),
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    name: process.env.DB_NAME || 'lendqr_wallet',
+    url: process.env.DATABASE_URL || 'postgres://postgres:password@127.0.0.1:5432/lendqr_wallet',
+    ssl: process.env.DB_SSL === 'true' || /sslmode=require/i.test(process.env.DATABASE_URL || ''),
   },
   adjutor: {
     baseUrl: process.env.ADJUTOR_BASE_URL || 'https://adjutor.lendsqr.com/v2',

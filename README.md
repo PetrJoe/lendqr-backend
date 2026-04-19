@@ -1,11 +1,11 @@
 # Lendsqr Wallet Service
 
-A demo MVP wallet service built with **Node.js + TypeScript + Knex + MySQL**.
+A demo MVP wallet service built with **Node.js + TypeScript + Knex + PostgreSQL**.
 
 ## Architecture
 
 ```
-Controller → Service → Repository → Knex (MySQL)
+Controller → Service → Repository → Knex (PostgreSQL)
 ```
 
 Layered architecture with a clear separation of concerns:
@@ -55,7 +55,7 @@ blacklist_checks (id PK, user_email, user_phone, provider, is_blacklisted,
 
 ### Prerequisites
 - Node.js 20+
-- MySQL 8+
+- PostgreSQL 14+
 
 ### Install
 
@@ -93,11 +93,8 @@ npm run test:coverage   # with coverage report
 | Variable | Description |
 |---|---|
 | `PORT` | HTTP port (default 3000) |
-| `DB_HOST` | MySQL host |
-| `DB_PORT` | MySQL port |
-| `DB_USER` | MySQL user |
-| `DB_PASSWORD` | MySQL password |
-| `DB_NAME` | Database name |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `DB_SSL` | Enable SSL (`true`/`false`) |
 | `ADJUTOR_BASE_URL` | Adjutor API base URL |
 | `ADJUTOR_API_KEY` | Adjutor API key |
 | `ADJUTOR_TIMEOUT_MS` | Adjutor request timeout (default 5000) |
@@ -178,4 +175,4 @@ Faux bearer token: HMAC-SHA256 signed `userId.timestamp` encoded as base64. **No
 - **Idempotency**: Full idempotency key table is migrated but not wired into endpoints — next step
 - **Observability**: Add structured logging (pino) and request correlation IDs
 - **Multi-currency**: Schema supports `currency` column; conversion logic not implemented
-- **Integration tests**: Unit tests cover all business logic; DB integration tests require a test MySQL instance
+- **Integration tests**: Unit tests cover all business logic; DB integration tests require a test PostgreSQL instance
