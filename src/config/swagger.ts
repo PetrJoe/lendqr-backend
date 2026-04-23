@@ -95,10 +95,22 @@ const spec: OpenAPIV3.Document = {
               },
             },
           },
-          '400': { description: 'Validation error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          '403': { description: 'User is blacklisted', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          '409': { description: 'Email already registered', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          '503': { description: 'Karma service unavailable', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '400': {
+            description: 'Validation error',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
+          '403': {
+            description: 'User is blacklisted',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
+          '409': {
+            description: 'Email already registered',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
+          '503': {
+            description: 'Karma service unavailable',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
         },
       },
     },
@@ -142,7 +154,10 @@ const spec: OpenAPIV3.Document = {
               },
             },
           },
-          '401': { description: 'Invalid credentials', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '401': {
+            description: 'Invalid credentials',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
         },
       },
     },
@@ -150,7 +165,8 @@ const spec: OpenAPIV3.Document = {
       post: {
         tags: ['Auth'],
         summary: 'Request a password reset token',
-        description: 'Always returns success to prevent user enumeration. In production the token would be emailed; for this MVP it is returned in the response.',
+        description:
+          'Always returns success to prevent user enumeration. In production the token would be emailed; for this MVP it is returned in the response.',
         requestBody: {
           required: true,
           content: {
@@ -178,7 +194,11 @@ const spec: OpenAPIV3.Document = {
                       type: 'object',
                       properties: {
                         message: { type: 'string' },
-                        reset_token: { type: 'string', description: 'Present only when email matched a user. Use in /auth/reset-password.' },
+                        reset_token: {
+                          type: 'string',
+                          description:
+                            'Present only when email matched a user. Use in /auth/reset-password.',
+                        },
                       },
                     },
                   },
@@ -186,7 +206,10 @@ const spec: OpenAPIV3.Document = {
               },
             },
           },
-          '400': { description: 'Validation error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '400': {
+            description: 'Validation error',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
         },
       },
     },
@@ -202,7 +225,10 @@ const spec: OpenAPIV3.Document = {
                 type: 'object',
                 required: ['token', 'password'],
                 properties: {
-                  token: { type: 'string', description: 'Token received from /auth/forgot-password' },
+                  token: {
+                    type: 'string',
+                    description: 'Token received from /auth/forgot-password',
+                  },
                   password: { type: 'string', minLength: 8, example: 'NewPassword123!' },
                 },
               },
@@ -224,7 +250,10 @@ const spec: OpenAPIV3.Document = {
               },
             },
           },
-          '400': { description: 'Invalid or expired token', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '400': {
+            description: 'Invalid or expired token',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
         },
       },
     },
@@ -236,9 +265,22 @@ const spec: OpenAPIV3.Document = {
         responses: {
           '200': {
             description: 'User profile',
-            content: { 'application/json': { schema: { type: 'object', properties: { status: { type: 'string' }, data: { $ref: '#/components/schemas/UserProfile' } } } } },
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string' },
+                    data: { $ref: '#/components/schemas/UserProfile' },
+                  },
+                },
+              },
+            },
           },
-          '401': { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '401': {
+            description: 'Unauthorized',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
         },
       },
     },
@@ -250,9 +292,25 @@ const spec: OpenAPIV3.Document = {
         responses: {
           '200': {
             description: 'Current balance',
-            content: { 'application/json': { schema: { type: 'object', properties: { status: { type: 'string' }, data: { type: 'object', properties: { balance: { type: 'number' }, currency: { type: 'string' } } } } } } },
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string' },
+                    data: {
+                      type: 'object',
+                      properties: { balance: { type: 'number' }, currency: { type: 'string' } },
+                    },
+                  },
+                },
+              },
+            },
           },
-          '401': { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '401': {
+            description: 'Unauthorized',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
         },
       },
     },
@@ -277,9 +335,28 @@ const spec: OpenAPIV3.Document = {
           },
         },
         responses: {
-          '200': { description: 'Wallet funded', content: { 'application/json': { schema: { type: 'object', properties: { status: { type: 'string' }, data: { $ref: '#/components/schemas/WalletResult' } } } } } },
-          '400': { description: 'Validation error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          '401': { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '200': {
+            description: 'Wallet funded',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string' },
+                    data: { $ref: '#/components/schemas/WalletResult' },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Validation error',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
+          '401': {
+            description: 'Unauthorized',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
         },
       },
     },
@@ -304,10 +381,32 @@ const spec: OpenAPIV3.Document = {
           },
         },
         responses: {
-          '200': { description: 'Withdrawal successful', content: { 'application/json': { schema: { type: 'object', properties: { status: { type: 'string' }, data: { $ref: '#/components/schemas/WalletResult' } } } } } },
-          '400': { description: 'Validation error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          '401': { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          '422': { description: 'Insufficient funds', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '200': {
+            description: 'Withdrawal successful',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string' },
+                    data: { $ref: '#/components/schemas/WalletResult' },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Validation error',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
+          '401': {
+            description: 'Unauthorized',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
+          '422': {
+            description: 'Insufficient funds',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
         },
       },
     },
@@ -333,11 +432,36 @@ const spec: OpenAPIV3.Document = {
           },
         },
         responses: {
-          '200': { description: 'Transfer successful', content: { 'application/json': { schema: { type: 'object', properties: { status: { type: 'string' }, data: { $ref: '#/components/schemas/WalletResult' } } } } } },
-          '400': { description: 'Validation error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          '401': { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          '404': { description: 'Receiver not found', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          '422': { description: 'Insufficient funds or self-transfer', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '200': {
+            description: 'Transfer successful',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string' },
+                    data: { $ref: '#/components/schemas/WalletResult' },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Validation error',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
+          '401': {
+            description: 'Unauthorized',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
+          '404': {
+            description: 'Receiver not found',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
+          '422': {
+            description: 'Insufficient funds or self-transfer',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
         },
       },
     },
@@ -347,7 +471,14 @@ const spec: OpenAPIV3.Document = {
         summary: 'List transaction history',
         security: [{ bearerAuth: [] }],
         parameters: [
-          { name: 'type', in: 'query', schema: { type: 'string', enum: ['FUND', 'WITHDRAW', 'TRANSFER_DEBIT', 'TRANSFER_CREDIT'] } },
+          {
+            name: 'type',
+            in: 'query',
+            schema: {
+              type: 'string',
+              enum: ['FUND', 'WITHDRAW', 'TRANSFER_DEBIT', 'TRANSFER_CREDIT'],
+            },
+          },
           { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
           { name: 'limit', in: 'query', schema: { type: 'integer', default: 20, maximum: 100 } },
         ],
@@ -381,7 +512,10 @@ const spec: OpenAPIV3.Document = {
               },
             },
           },
-          '401': { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          '401': {
+            description: 'Unauthorized',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
+          },
         },
       },
     },
@@ -390,7 +524,17 @@ const spec: OpenAPIV3.Document = {
         tags: ['Health'],
         summary: 'Health check',
         responses: {
-          '200': { description: 'OK', content: { 'application/json': { schema: { type: 'object', properties: { status: { type: 'string', example: 'ok' } } } } } },
+          '200': {
+            description: 'OK',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: { status: { type: 'string', example: 'ok' } },
+                },
+              },
+            },
+          },
         },
       },
     },
