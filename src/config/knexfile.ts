@@ -1,4 +1,5 @@
 import type { Knex } from 'knex';
+import path from 'path';
 import { env } from './env';
 
 const config: Knex.Config = {
@@ -8,11 +9,11 @@ const config: Knex.Config = {
     ssl: env.db.ssl ? { rejectUnauthorized: false } : false,
   },
   migrations: {
-    directory: '../database/migrations',
+    directory: path.resolve(process.cwd(), 'src/database/migrations'),
     extension: 'ts',
   },
   seeds: {
-    directory: '../database/seeds',
+    directory: path.resolve(process.cwd(), 'src/database/seeds'),
     extension: 'ts',
   },
 };
